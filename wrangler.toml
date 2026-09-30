@@ -8,4 +8,4 @@ directory = "."
 [[d1_databases]]
 binding = "DB"
 database_name = "forest-pop-scores"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "e1f131f7-c348-416e-ae78-ff2ab6f69e87"
