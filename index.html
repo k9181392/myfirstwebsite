@@ -36,6 +36,33 @@ h1{font-size:clamp(64px,7.8vw,112px);line-height:1.06;letter-spacing:-6px;margin
 @media(max-height:500px) and (max-width:700px) and (min-width:550px){.header{top:12px;left:20px;right:20px}.brand-mark{width:33px;height:33px;border-radius:11px}.brand-mark svg{width:26px;height:26px}.brand-name{font-size:18px}.hero{top:70px;left:6%;width:51%;transform:none}.eyebrow,.best-note{display:none}h1{font-size:47px;line-height:1;letter-spacing:-3px}.hero-desc{font-size:10px;line-height:1.6;margin:11px 0 14px;max-width:260px}.hero .primary{min-height:43px;font-size:12px;padding:11px 16px}.menu-footer{left:auto;right:22px;bottom:14px;width:45%}.feature{flex-direction:row;justify-content:center;padding:8px 5px;gap:0;border-radius:10px}.feature-icon{display:none}.feature strong{font-size:9px}}
 @media(max-height:500px) and (min-width:550px){.hud-top{top:12px;left:16px;right:16px;grid-template-columns:190px 1fr 190px;gap:10px;align-items:start}.health-card{padding:9px 11px;border-radius:16px}.avatar{width:32px;height:32px}.avatar svg{width:27px;height:27px}.health-label{font-size:11px;margin-bottom:6px}.bar{height:7px}.timer-card{position:static;transform:none;min-width:128px;padding:6px 12px;border-radius:15px}.timer-line strong{font-size:23px}.stage-name{font-size:7px;letter-spacing:1px}.stage-name svg{width:10px;height:10px}.timer-line span{font-size:9px}.hud-button{width:36px;height:36px;border-radius:12px}.hud-button svg{width:19px;height:19px}.kill-count{position:static;font-size:14px;padding:8px 10px;border-radius:12px;gap:6px}.kill-count small{display:none}.kill-count svg{width:16px;height:16px}.exp-hud{top:75px;left:18px;right:18px}.boss-hud{top:108px;max-width:310px}.boss-label{font-size:10px}.boss-track{height:8px}.hud-bottom{bottom:16px;left:18px}.weapon-slot{width:39px;height:40px;border-radius:12px}.weapon-slot svg{width:23px;height:23px}#dashBtn{width:62px;height:60px;border-radius:20px;bottom:15px;right:20px}#dashBtn svg{width:21px;height:21px}#dashBtn small{display:none}.touch-label{display:none}#toast{top:108px;font-size:10px;padding:8px 13px}#toast.boss-toast{top:145px}.control-hint{display:none}.overlay{padding:13px}.simple-panel,.help-panel,.end-panel{max-height:calc(100svh - 26px);overflow:auto}.level-panel{max-height:calc(100svh - 26px);overflow:auto}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* Online leaderboard */
+.online-score-box{margin:18px auto 0;max-width:390px;text-align:left}
+.online-score-title{font-size:11px;color:#9c8fa8;font-weight:800;margin-bottom:7px}
+.online-score-form{display:flex;gap:7px}
+#nicknameInput{flex:1;min-width:0;height:43px;border:1px solid #e7e1ef;border-radius:13px;padding:0 12px;background:#fff;color:var(--ink);font:inherit;font-size:12px;outline:none}
+#nicknameInput:focus{border-color:#b5a0ed;box-shadow:0 0 0 3px #b5a0ed22}
+#saveScoreBtn{height:43px;border-radius:13px;padding:0 13px;background:#8b73da;color:white;font-size:11px;font-weight:800;white-space:nowrap}
+#saveScoreBtn:disabled{opacity:.48}
+#scoreSaveMessage{min-height:16px;margin-top:6px;font-size:10px;color:#9b8b6c;text-align:center}
+.leaderboard{margin:16px auto 0;max-width:390px;text-align:left}
+.leaderboard-title{font-size:12px;font-weight:850;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}
+.leaderboard-title small{font-size:9px;color:#aaa0ad;font-weight:600}
+#leaderboardList{display:flex;flex-direction:column;gap:5px;max-height:160px;overflow:auto;padding-right:2px}
+.score-row{display:grid;grid-template-columns:25px 1fr auto;align-items:center;gap:7px;padding:7px 9px;border-radius:11px;background:#f5f1f9;font-size:10px}
+.score-row:nth-child(1){background:#f8f0dc}
+.score-rank{font-weight:900;color:#8e78b0;text-align:center}
+.score-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.score-value{font-weight:850;color:#6450b6;font-variant-numeric:tabular-nums}
+.score-empty,.score-error{padding:10px;border-radius:11px;background:#f7f4fa;color:#a198aa;text-align:center;font-size:10px}
+@media(max-width:700px){
+  .online-score-box,.leaderboard{max-width:100%}
+  .end-panel .online-score-box{margin-top:15px}
+  #nicknameInput,#saveScoreBtn{height:40px}
+  #leaderboardList{max-height:120px}
+}
+
 </style>
 </head>
 <body>
@@ -55,7 +82,7 @@ h1{font-size:clamp(64px,7.8vw,112px);line-height:1.06;letter-spacing:-6px;margin
 <section id="levelOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="levelTitle" hidden><div class="panel level-panel"><div class="panel-tag"><span data-icon="sparkle"></span><span id="levelTag">LEVEL 2</span></div><h2 id="levelTitle">어떤 마법을 피워 볼까요?</h2><p class="panel-desc">시간이 잠시 멈췄어요. 하나를 골라 더 강해지세요.</p><div id="choices" class="upgrade-cards"></div><button id="rerollBtn" class="reroll-btn"><span data-icon="refresh"></span><span id="rerollText">다시 고르기 · 2회</span></button></div></section>
 <section id="pauseOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pauseTitle" hidden><div class="panel simple-panel"><div class="panel-illustration" data-icon="tea"></div><div class="panel-tag">TAKE A LITTLE BREAK</div><h2 id="pauseTitle">잠깐, 꽃차 한 잔?</h2><p class="panel-desc">꽃숲도 잠시 쉬는 중이에요.<br>준비되면 모험을 이어 가세요.</p><div class="panel-actions"><button id="resumeBtn" class="primary"><span data-icon="play"></span>계속 모험하기</button><button id="restartPauseBtn" class="secondary"><span data-icon="refresh"></span>새로 시작하기</button><button id="menuPauseBtn" class="text-btn">처음 화면으로</button></div></div></section>
 <section id="helpOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden><div class="panel help-panel"><div class="panel-tag">HOW TO PLAY</div><h2 id="helpTitle">작은 모험 안내서</h2><div class="help-list"><div class="help-item"><div class="help-icon" data-icon="move"></div><div><strong>이동만 해도, 마법이 팡!</strong><p>WASD / 방향키로 이동하세요. 마우스나 터치로 화면을 드래그해도 돼요. 가까운 말랑이를 자동 공격해요.</p></div></div><div class="help-item"><div class="help-icon" data-icon="gem"></div><div><strong>별씨앗을 모아 더 강하게</strong><p>말랑이가 남긴 보석을 모으면 레벨 업! 세 가지 중 하나를 골라 무기와 능력을 성장시키세요.</p></div></div><div class="help-item"><div class="help-icon" data-icon="bolt"></div><div><strong>위험할 땐 쌩, 대시!</strong><p>Space 또는 오른쪽 아래 대시 버튼. 짧은 무적 시간으로 포위를 탈출해요. 재사용 대기 2.6초.</p></div></div><div class="help-item"><div class="help-icon" data-icon="heart"></div><div><strong>하트는 회복, 자석은 수집</strong><p>분홍 하트로 체력을 회복하고, 가끔 나타나는 자석으로 흩어진 별씨앗을 한 번에 모으세요.</p></div></div></div><div class="help-goal">목표: <b>3분 동안 생존 + 빅 말랑 처치</b><br>빅 말랑은 2분 30초에 나타나요. P / Esc로 언제든 쉬어 갈 수 있어요.</div><button id="closeHelpBtn" class="primary">이제 준비됐어요<span data-icon="arrow"></span></button></div></section>
-<section id="endOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="endTitle" hidden><div class="panel end-panel"><div id="endArt" class="panel-illustration" data-icon="bunny"></div><div id="endTag" class="panel-tag">A LOVELY LITTLE ADVENTURE</div><h2 id="endTitle">다음 모험도 함께해요</h2><p id="endDesc" class="panel-desc"></p><div class="end-stats"><div class="end-stat"><small>함께한 시간</small><strong id="endTime">00:00</strong></div><div class="end-stat"><small>말랑이 팝!</small><strong id="endKills">0</strong></div><div class="end-stat"><small>도달 레벨</small><strong id="endLevel">1</strong></div></div><div class="record-line"><span data-icon="trophy"></span><span id="endRecord"></span></div><div class="panel-actions"><button id="againBtn" class="primary"><span data-icon="refresh"></span>한 번 더 모험하기</button><button id="endMenuBtn" class="text-btn">처음 화면으로</button></div></div></section>
+<section id="endOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="endTitle" hidden><div class="panel end-panel"><div id="endArt" class="panel-illustration" data-icon="bunny"></div><div id="endTag" class="panel-tag">A LOVELY LITTLE ADVENTURE</div><h2 id="endTitle">다음 모험도 함께해요</h2><p id="endDesc" class="panel-desc"></p><div class="end-stats"><div class="end-stat"><small>함께한 시간</small><strong id="endTime">00:00</strong></div><div class="end-stat"><small>말랑이 팝!</small><strong id="endKills">0</strong></div><div class="end-stat"><small>도달 레벨</small><strong id="endLevel">1</strong></div></div><div class="record-line"><span data-icon="trophy"></span><span id="endRecord"></span></div><div class="online-score-box"><div class="online-score-title">🏆 온라인 명예의 전당에 기록하기</div><div class="online-score-form"><input id="nicknameInput" type="text" maxlength="12" placeholder="닉네임 (최대 12자)" autocomplete="off" spellcheck="false"><button id="saveScoreBtn" type="button">점수 등록</button></div><div id="scoreSaveMessage" aria-live="polite"></div></div><div class="leaderboard"><div class="leaderboard-title"><span>🏆 TOP 10</span><small>점수순</small></div><div id="leaderboardList"><div class="score-empty">불러오는 중...</div></div></div><div class="panel-actions"><button id="againBtn" class="primary"><span data-icon="refresh"></span>한 번 더 모험하기</button><button id="endMenuBtn" class="text-btn">처음 화면으로</button></div></div></section>
 <noscript>이 게임은 JavaScript가 필요합니다. JavaScript를 사용할 수 있는 브라우저에서 파일을 열어 주세요.</noscript>
 <script>
 'use strict';
@@ -104,6 +131,7 @@ const player={x:0,y:0,r:16,speed:211,hp:100,maxHp:100,damage:1,rate:1,pickup:91,
 let enemies=[],bullets=[],pickups=[],particles=[],effects=[],enemyShots=[],numbers=[],choices=[],nextId=1;
 let upgradesTaken={};
 let record={score:0,time:0,kills:0,wins:0}, soundEnabled=true;
+let currentOnlineScore=null;
 try{const saved=JSON.parse(localStorage.getItem('forest-pop-record-v1')||'null');if(saved && Number.isFinite(saved.score))record={...record,...saved};soundEnabled=localStorage.getItem('forest-pop-sound')!=='off';}catch(e){}
 const audio={ctx:null,master:null,noteClock:0,noteIndex:0,lastShot:0,
  init(){try{if(!this.ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;this.ctx=new AC();this.master=this.ctx.createGain();this.master.connect(this.ctx.destination);}if(this.ctx.state==='suspended')this.ctx.resume().catch(()=>{});this.master.gain.value=soundEnabled?.12:0;}catch(e){}},
@@ -125,7 +153,113 @@ function goMenu(){setMode('menu');state.toastClock=0;$('damageVignette').style.o
 function showToast(text,duration=3,boss=false){$('toastText').textContent=text;state.toastClock=duration;$('toast').classList.toggle('boss-toast',boss);$('toast').classList.add('show');}
 function updateHUD(){ $('hpText').textContent=`${Math.ceil(Math.max(0,player.hp))} / ${player.maxHp}`;$('hpFill').style.width=`${clamp(player.hp/player.maxHp,0,1)*100}%`;$('timer').textContent=formatTime(state.time);$('kills').textContent=state.kills;$('levelChip').textContent=`LV. ${state.level}`;$('xpFill').style.width=`${clamp(state.xp/state.nextXp,0,1)*100}%`;$('xpText').textContent=`${state.xp} / ${state.nextXp}`;$('dashCool').style.height=`${clamp(player.dashCD/2.6,0,1)*100}%`;$('dashBtn').classList.toggle('unready',player.dashCD>0);$('dashText').textContent=player.dashCD>0?`${player.dashCD.toFixed(1)}초`:'대시';$('bossHud').hidden=!state.boss||state.boss.dead;if(state.boss)$('bossFill').style.width=`${clamp(state.boss.hp/state.boss.maxHp,0,1)*100}%`;}
 function updateLoadout(){const names={petal:'꽃잎 샷',orbit:'별사탕 위성',nova:'무지개 파동',carrot:'당근 부메랑'}, ims={petal:'flower',orbit:'orbit',nova:'nova',carrot:'carrot'};$('loadout').innerHTML=Object.keys(player.weapons).map(k=>player.weapons[k]?`<div class="weapon-slot" title="${names[k]} · 레벨 ${player.weapons[k]}" aria-label="${names[k]} 레벨 ${player.weapons[k]}">${icons[ims[k]]}<small>${player.weapons[k]}</small></div>`:`<div class="weapon-slot empty" title="레벨업으로 새 마법을 배워요" aria-label="아직 배우지 않은 마법">${icons.plus}</div>`).join('');}
-function finishRun(won){if(state.mode==='ended'||state.mode==='menu')return;state.won=won;const score=state.kills*10+Math.floor(state.time)*3+(won?1500:0);const isNew=score>record.score;record.wins=(record.wins||0)+(won?1:0);if(isNew)record={...record,score,time:Math.floor(state.time),kills:state.kills};try{localStorage.setItem('forest-pop-record-v1',JSON.stringify(record));}catch(e){}$('endArt').innerHTML=icons[won?'trophy':'bunny'];$('endTag').textContent=won?'THE FOREST IS HAPPY AGAIN':'A LITTLE REST, A NEW ADVENTURE';$('endTitle').textContent=won?'꽃숲을 지켜냈어요!':'괜찮아요, 다시 피어나면 돼요';$('endDesc').innerHTML=won?'모모 덕분에 오늘도 숲은 반짝반짝.<br>작은 용기로 커다란 모험을 해냈어요.':'오늘 모은 용기는 사라지지 않아요.<br>다른 마법 조합으로 다시 도전해 보세요.';$('endTime').textContent=formatTime(state.time);$('endKills').textContent=state.kills;$('endLevel').textContent=state.level;$('endRecord').textContent=`${isNew?'새로운 최고 기록! · ':''}${score.toLocaleString()}점${!isNew?` · 최고 ${record.score.toLocaleString()}점`:''}`;setMode('ended');updateHUD();audio.sfx(won?'win':'lose');refreshRecord();}
+
+function escapeHtml(value){
+  return String(value)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
+}
+
+function renderLeaderboard(scores){
+  const list=$('leaderboardList');
+  if(!Array.isArray(scores)||!scores.length){
+    list.innerHTML='<div class="score-empty">아직 등록된 기록이 없어요.</div>';
+    return;
+  }
+  list.innerHTML=scores.map((item,i)=>`
+    <div class="score-row">
+      <span class="score-rank">${i+1}</span>
+      <span class="score-name">${escapeHtml(item.nickname)}</span>
+      <span class="score-value">${Number(item.score).toLocaleString()}점</span>
+    </div>
+  `).join('');
+}
+
+async function loadLeaderboard(){
+  const list=$('leaderboardList');
+  try{
+    const response=await fetch('/api/scores',{cache:'no-store'});
+    if(!response.ok)throw new Error('leaderboard request failed');
+    const scores=await response.json();
+    renderLeaderboard(scores);
+  }catch(e){
+    console.warn('온라인 점수판을 불러오지 못했습니다.',e);
+    list.innerHTML='<div class="score-error">온라인 점수판을 불러오지 못했어요.</div>';
+  }
+}
+
+async function saveOnlineScore(){
+  const input=$('nicknameInput'), button=$('saveScoreBtn'), message=$('scoreSaveMessage');
+  const nickname=input.value.trim();
+  if(!nickname){
+    message.textContent='닉네임을 입력해 주세요.';
+    input.focus();
+    return;
+  }
+  if(!currentOnlineScore)return;
+
+  button.disabled=true;
+  message.textContent='점수를 등록하는 중...';
+
+  try{
+    const response=await fetch('/api/scores',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({nickname,...currentOnlineScore})
+    });
+    const data=await response.json();
+    if(!response.ok)throw new Error(data.error||'save failed');
+    message.textContent='🏆 점수가 등록되었습니다!';
+    renderLeaderboard(data.scores);
+    input.disabled=true;
+  }catch(e){
+    console.warn('온라인 점수 등록에 실패했습니다.',e);
+    message.textContent='등록하지 못했어요. 잠시 후 다시 시도해 주세요.';
+  }finally{
+    button.disabled=false;
+  }
+}
+
+function finishRun(won){
+  if(state.mode==='ended'||state.mode==='menu')return;
+  state.won=won;
+  const score=state.kills*10+Math.floor(state.time)*3+(won?1500:0);
+  const isNew=score>record.score;
+  record.wins=(record.wins||0)+(won?1:0);
+  if(isNew)record={...record,score,time:Math.floor(state.time),kills:state.kills};
+  try{localStorage.setItem('forest-pop-record-v1',JSON.stringify(record));}catch(e){}
+
+  currentOnlineScore={
+    score,
+    time:Math.floor(state.time),
+    kills:state.kills,
+    level:state.level
+  };
+
+  $('endArt').innerHTML=icons[won?'trophy':'bunny'];
+  $('endTag').textContent=won?'THE FOREST IS HAPPY AGAIN':'A LITTLE REST, A NEW ADVENTURE';
+  $('endTitle').textContent=won?'꽃숲을 지켜냈어요!':'괜찮아요, 다시 피어나면 돼요';
+  $('endDesc').innerHTML=won?'모모 덕분에 오늘도 숲은 반짝반짝.<br>작은 용기로 커다란 모험을 해냈어요.':'오늘 모은 용기는 사라지지 않아요.<br>다른 마법 조합으로 다시 도전해 보세요.';
+  $('endTime').textContent=formatTime(state.time);
+  $('endKills').textContent=state.kills;
+  $('endLevel').textContent=state.level;
+  $('endRecord').textContent=`${isNew?'새로운 최고 기록! · ':''}${score.toLocaleString()}점${!isNew?` · 최고 ${record.score.toLocaleString()}점`:''}`;
+
+  $('nicknameInput').value='';
+  $('nicknameInput').disabled=false;
+  $('scoreSaveMessage').textContent='';
+  $('saveScoreBtn').disabled=false;
+
+  setMode('ended');
+  updateHUD();
+  audio.sfx(won?'win':'lose');
+  refreshRecord();
+  loadLeaderboard();
+}
+
 const upgradeDefs=[
  {id:'petal',name:'꽃잎 샷',icon:'flower',cat:'magic',weapon:true,max:5,desc:n=>n===1?'가까운 말랑이에게 반짝이는 꽃잎을 발사해요.':`피해량과 발사 속도 증가.${n===3||n===5?' 꽃잎 한 발 추가!':n===4?' 적 하나를 관통해요!':''}`},
  {id:'orbit',name:'별사탕 위성',icon:'orbit',cat:'magic',weapon:true,max:5,desc:n=>n===1?'달콤한 별 두 개가 주위를 돌며 말랑이를 밀어내요.':'위성의 피해량과 궤도 크기 증가.'+(n===2||n===4?' 별 하나 추가!':'')},
@@ -219,7 +353,13 @@ canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointer
 $('startBtn').addEventListener('click',resetGame);$('againBtn').addEventListener('click',resetGame);$('restartPauseBtn').addEventListener('click',resetGame);$('pauseBtn').addEventListener('click',pauseGame);$('resumeBtn').addEventListener('click',resumeGame);$('menuPauseBtn').addEventListener('click',goMenu);$('endMenuBtn').addEventListener('click',goMenu);$('helpBtn').addEventListener('click',()=>setMode('help'));$('closeHelpBtn').addEventListener('click',()=>{setMode('menu');$('helpBtn').focus({preventScroll:true});});document.querySelectorAll('[data-sound]').forEach(b=>b.addEventListener('click',toggleSound));$('dashBtn').addEventListener('pointerdown',e=>{e.preventDefault();requestDash();});$('dashBtn').addEventListener('click',e=>{if(e.detail===0)requestDash();});$('rerollBtn').addEventListener('click',()=>{if(state.mode!=='levelup'||state.rerolls<=0)return;state.rerolls--;buildChoices();audio.tone(620,.11,'sine',.16);});
 // Keep keyboard focus inside open dialogs.
 document.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const ids={help:'helpOverlay',paused:'pauseOverlay',levelup:'levelOverlay',ended:'endOverlay'},id=ids[state.mode];if(!id)return;const items=Array.from($(id).querySelectorAll('button:not(:disabled)'));if(!items.length)return;const first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
-resize();refreshSound();refreshRecord();updateLoadout();requestAnimationFrame(frame);
+resize();refreshSound();
+$('saveScoreBtn').addEventListener('click',saveOnlineScore);
+$('nicknameInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter')saveOnlineScore();
+});
+
+refreshRecord();updateLoadout();requestAnimationFrame(frame);
 </script>
 </body>
 </html>
