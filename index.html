@@ -50,6 +50,15 @@ h1{font-size:clamp(64px,7.8vw,112px);line-height:1.06;letter-spacing:-6px;margin
 .leaderboard-title{font-size:12px;font-weight:850;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}
 .leaderboard-title small{font-size:9px;color:#aaa0ad;font-weight:600}
 #leaderboardList{display:flex;flex-direction:column;gap:5px;max-height:160px;overflow:auto;padding-right:2px}
+.menu-leaderboard{width:min(100%,520px);margin:18px auto 0;padding:14px 16px;border:1px solid #eee6f0;border-radius:18px;background:#ffffffc9;box-shadow:0 8px 24px #806b8c12}
+.menu-leaderboard .leaderboard{margin:0;padding:0;border:0;background:transparent;box-shadow:none}
+.menu-leaderboard-list{display:flex;flex-direction:column;gap:5px;max-height:170px;overflow:auto;padding-right:2px}
+.menu-leaderboard-list .score-row{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:8px;min-height:30px;padding:4px 7px;border-radius:10px;background:#fffafc}
+.menu-leaderboard-list .score-rank{font-weight:800;color:#9a87ae}
+.menu-leaderboard-list .score-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#62566e;font-weight:700}
+.menu-leaderboard-list .score-value{font-weight:850;color:#765e96;font-variant-numeric:tabular-nums}
+.menu-leaderboard-list .score-empty,.menu-leaderboard-list .score-error{padding:10px 6px;text-align:center;color:#9a8fa1;font-size:12px}
+@media(max-width:640px){.menu-leaderboard{margin-top:14px;padding:12px}.menu-leaderboard-list{max-height:145px}}
 .score-row{display:grid;grid-template-columns:25px 1fr auto;align-items:center;gap:7px;padding:7px 9px;border-radius:11px;background:#f5f1f9;font-size:10px}
 .score-row:nth-child(1){background:#f8f0dc}
 .score-rank{font-weight:900;color:#8e78b0;text-align:center}
@@ -69,7 +78,7 @@ h1{font-size:clamp(64px,7.8vw,112px);line-height:1.06;letter-spacing:-6px;margin
 <canvas id="world" aria-label="꽃숲 생존 게임. WASD 또는 방향키로 이동하고 Space로 대시합니다."></canvas>
 <section id="menu" aria-label="포레스트 팝 시작 화면">
  <header class="header"><div class="brand"><div class="brand-mark" data-icon="bunnyLight"></div><div class="brand-name">forest pop<small>A LITTLE FOREST ADVENTURE</small></div></div><div class="header-actions"><button id="soundMenu" class="round-btn" data-sound aria-label="소리 끄기" title="소리 켜기 / 끄기"></button><button id="helpBtn" class="soft-btn"><span data-icon="help"></span>플레이 방법</button></div></header>
- <main class="hero"><div class="eyebrow"><span data-icon="sparkle"></span>작고 귀여운, 꽤나 용감한</div><h1>포레스트<span class="pop">팝<span class="bang">!</span></span></h1><p class="hero-desc">토끼 마법사 모모와 함께<br>말랑이들로부터 반짝이는 꽃숲을 지켜 주세요.</p><div class="start-row"><button id="startBtn" class="primary"><span data-icon="play"></span>모험 시작<span style="opacity:.6;font-weight:500;margin-left:8px">→</span></button><div class="start-note"><b>딱 3분, 나만의 작은 모험</b>키보드 · 마우스 · 터치 지원</div></div><div class="best-note"><span data-icon="trophy"></span><span id="menuBest">첫 번째 모험이 기다리고 있어요</span></div></main>
+ <main class="hero"><div class="eyebrow"><span data-icon="sparkle"></span>작고 귀여운, 꽤나 용감한</div><h1>포레스트<span class="pop">팝<span class="bang">!</span></span></h1><p class="hero-desc">토끼 마법사 모모와 함께<br>말랑이들로부터 반짝이는 꽃숲을 지켜 주세요.</p><div class="start-row"><button id="startBtn" class="primary"><span data-icon="play"></span>모험 시작<span style="opacity:.6;font-weight:500;margin-left:8px">→</span></button><div class="start-note"><b>딱 3분, 나만의 작은 모험</b>키보드 · 마우스 · 터치 지원</div></div><div class="best-note"><span data-icon="trophy"></span><span id="menuBest">첫 번째 모험이 기다리고 있어요</span></div><div class="menu-leaderboard"><div class="leaderboard"><div class="leaderboard-title"><span>🏆 온라인 TOP 10</span><small>점수순</small></div><div id="menuLeaderboardList" class="menu-leaderboard-list"><div class="score-empty">불러오는 중...</div></div></div></div></main>
  <footer class="menu-footer"><div class="features"><div class="feature"><div class="feature-icon" data-icon="flower"></div><div><strong>마법은 자동으로</strong><small>이동에만 집중하세요</small></div></div><div class="feature"><div class="feature-icon" data-icon="sprout"></div><div><strong>나만의 성장 조합</strong><small>골라서 더 강해지세요</small></div></div><div class="feature"><div class="feature-icon" data-icon="sun"></div><div><strong>가볍게, 한 판</strong><small>3분 동안 꽃숲 지키기</small></div></div></div><div class="footer-note"><b>SMALL HERO. BIG HEART.</b>설치 없이 · 인터넷 없이 · 언제든</div></footer>
 </section>
 <div id="hud" hidden>
@@ -132,6 +141,7 @@ let enemies=[],bullets=[],pickups=[],particles=[],effects=[],enemyShots=[],numbe
 let upgradesTaken={};
 let record={score:0,time:0,kills:0,wins:0}, soundEnabled=true;
 let currentOnlineScore=null;
+let onlineScoreSaving=false;
 try{const saved=JSON.parse(localStorage.getItem('forest-pop-record-v1')||'null');if(saved && Number.isFinite(saved.score))record={...record,...saved};soundEnabled=localStorage.getItem('forest-pop-sound')!=='off';}catch(e){}
 const audio={ctx:null,master:null,noteClock:0,noteIndex:0,lastShot:0,
  init(){try{if(!this.ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;this.ctx=new AC();this.master=this.ctx.createGain();this.master.connect(this.ctx.destination);}if(this.ctx.state==='suspended')this.ctx.resume().catch(()=>{});this.master.gain.value=soundEnabled?.12:0;}catch(e){}},
@@ -149,7 +159,7 @@ function setMode(mode){state.mode=mode;document.body.dataset.mode=mode;$('menu')
 function resetGame(){clearInput();Object.assign(state,{time:0,kills:0,level:1,xp:0,nextXp:8,pendingLevels:0,rerolls:2,bossSpawned:false,bossDefeated:false,boss:null,spawnClock:.65,toastClock:0,hitFlash:0,won:false});Object.assign(player,{x:0,y:0,r:16,speed:211,hp:100,maxHp:100,damage:1,rate:1,pickup:91,crit:.08,regen:0,invuln:1.5,facing:1,move:0,walk:0,dx:1,dy:0,dash:0,dashCD:0,dashX:1,dashY:0,trailClock:0,weapons:{petal:1,orbit:0,nova:0,carrot:0},timers:{petal:.2,nova:2,carrot:1}});enemies=[];bullets=[];pickups=[];particles=[];effects=[];enemyShots=[];numbers=[];choices=[];upgradesTaken={};nextId=1;audio.noteClock=0;audio.noteIndex=0;audio.lastShot=-1;audio.init();setMode('playing');$('damageVignette').style.opacity=0;$('bossHud').hidden=true;for(let i=0;i<4;i++)spawnEnemy('blob',TAU*i/4+.6,250+i*30);updateLoadout();updateHUD();showToast('별씨앗을 모으세요! 마법은 자동으로 발사돼요.',4.2);}
 function pauseGame(){if(state.mode==='playing')setMode('paused');}
 function resumeGame(){if(state.mode==='paused'){setMode('playing');audio.init();}}
-function goMenu(){setMode('menu');state.toastClock=0;$('damageVignette').style.opacity=0;refreshRecord();$('startBtn').focus({preventScroll:true});}
+function goMenu(){setMode('menu');state.toastClock=0;$('damageVignette').style.opacity=0;refreshRecord();$('startBtn').focus({preventScroll:true});loadLeaderboard('menuLeaderboardList');}
 function showToast(text,duration=3,boss=false){$('toastText').textContent=text;state.toastClock=duration;$('toast').classList.toggle('boss-toast',boss);$('toast').classList.add('show');}
 function updateHUD(){ $('hpText').textContent=`${Math.ceil(Math.max(0,player.hp))} / ${player.maxHp}`;$('hpFill').style.width=`${clamp(player.hp/player.maxHp,0,1)*100}%`;$('timer').textContent=formatTime(state.time);$('kills').textContent=state.kills;$('levelChip').textContent=`LV. ${state.level}`;$('xpFill').style.width=`${clamp(state.xp/state.nextXp,0,1)*100}%`;$('xpText').textContent=`${state.xp} / ${state.nextXp}`;$('dashCool').style.height=`${clamp(player.dashCD/2.6,0,1)*100}%`;$('dashBtn').classList.toggle('unready',player.dashCD>0);$('dashText').textContent=player.dashCD>0?`${player.dashCD.toFixed(1)}초`:'대시';$('bossHud').hidden=!state.boss||state.boss.dead;if(state.boss)$('bossFill').style.width=`${clamp(state.boss.hp/state.boss.maxHp,0,1)*100}%`;}
 function updateLoadout(){const names={petal:'꽃잎 샷',orbit:'별사탕 위성',nova:'무지개 파동',carrot:'당근 부메랑'}, ims={petal:'flower',orbit:'orbit',nova:'nova',carrot:'carrot'};$('loadout').innerHTML=Object.keys(player.weapons).map(k=>player.weapons[k]?`<div class="weapon-slot" title="${names[k]} · 레벨 ${player.weapons[k]}" aria-label="${names[k]} 레벨 ${player.weapons[k]}">${icons[ims[k]]}<small>${player.weapons[k]}</small></div>`:`<div class="weapon-slot empty" title="레벨업으로 새 마법을 배워요" aria-label="아직 배우지 않은 마법">${icons.plus}</div>`).join('');}
@@ -163,8 +173,8 @@ function escapeHtml(value){
     .replaceAll("'","&#039;");
 }
 
-function renderLeaderboard(scores){
-  const list=$('leaderboardList');
+function renderLeaderboard(scores, targetId='leaderboardList'){
+  const list=$(targetId);
   if(!Array.isArray(scores)||!scores.length){
     list.innerHTML='<div class="score-empty">아직 등록된 기록이 없어요.</div>';
     return;
@@ -178,13 +188,13 @@ function renderLeaderboard(scores){
   `).join('');
 }
 
-async function loadLeaderboard(){
-  const list=$('leaderboardList');
+async function loadLeaderboard(targetId='leaderboardList'){
+  const list=$(targetId);
   try{
     const response=await fetch('/api/scores',{cache:'no-store'});
     if(!response.ok)throw new Error('leaderboard request failed');
     const scores=await response.json();
-    renderLeaderboard(scores);
+    renderLeaderboard(scores,targetId);
   }catch(e){
     console.warn('온라인 점수판을 불러오지 못했습니다.',e);
     list.innerHTML='<div class="score-error">온라인 점수판을 불러오지 못했어요.</div>';
@@ -193,15 +203,17 @@ async function loadLeaderboard(){
 
 async function saveOnlineScore(){
   const input=$('nicknameInput'), button=$('saveScoreBtn'), message=$('scoreSaveMessage');
+  if(onlineScoreSaving||!currentOnlineScore)return;
   const nickname=input.value.trim();
   if(!nickname){
     message.textContent='닉네임을 입력해 주세요.';
     input.focus();
     return;
   }
-  if(!currentOnlineScore)return;
 
+  onlineScoreSaving=true;
   button.disabled=true;
+  input.disabled=true;
   message.textContent='점수를 등록하는 중...';
 
   try{
@@ -213,13 +225,16 @@ async function saveOnlineScore(){
     const data=await response.json();
     if(!response.ok)throw new Error(data.error||'save failed');
     message.textContent='🏆 점수가 등록되었습니다!';
-    renderLeaderboard(data.scores);
-    input.disabled=true;
+    currentOnlineScore=null;
+    renderLeaderboard(data,'leaderboardList');
+    renderLeaderboard(data,'menuLeaderboardList');
   }catch(e){
     console.warn('온라인 점수 등록에 실패했습니다.',e);
     message.textContent='등록하지 못했어요. 잠시 후 다시 시도해 주세요.';
+    input.disabled=false;
   }finally{
-    button.disabled=false;
+    onlineScoreSaving=false;
+    button.disabled=!currentOnlineScore;
   }
 }
 
@@ -248,6 +263,7 @@ function finishRun(won){
   $('endLevel').textContent=state.level;
   $('endRecord').textContent=`${isNew?'새로운 최고 기록! · ':''}${score.toLocaleString()}점${!isNew?` · 최고 ${record.score.toLocaleString()}점`:''}`;
 
+  onlineScoreSaving=false;
   $('nicknameInput').value='';
   $('nicknameInput').disabled=false;
   $('scoreSaveMessage').textContent='';
@@ -356,10 +372,10 @@ document.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const ids={help:
 resize();refreshSound();
 $('saveScoreBtn').addEventListener('click',saveOnlineScore);
 $('nicknameInput').addEventListener('keydown',e=>{
-  if(e.key==='Enter')saveOnlineScore();
+  if(e.key==='Enter'){e.preventDefault();saveOnlineScore();}
 });
 
-refreshRecord();updateLoadout();requestAnimationFrame(frame);
+refreshRecord();updateLoadout();loadLeaderboard('menuLeaderboardList');requestAnimationFrame(frame);
 </script>
 </body>
 </html>
